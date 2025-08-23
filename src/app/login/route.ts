@@ -11,5 +11,7 @@ export async function GET() {
     redirectUri: redirectTo,
   });
 
+  console.log("ENV: " + redirectTo);
+
   return redirect(signInUrl);
 }
