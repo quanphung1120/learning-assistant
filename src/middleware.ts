@@ -8,9 +8,9 @@ export function getRedirectUri() {
   if (isVercelEnv) {
     const envType = process.env.VERCEL_ENV;
     if (envType === "production") {
-      redirectTo = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-    } else {
-      redirectTo = process.env.VERCEL_URL;
+      redirectTo = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+    } else if (envType === "preview") {
+      redirectTo = `https://${process.env.VERCEL_URL}`;
     }
   } else {
     redirectTo = "http://localhost:3000";
