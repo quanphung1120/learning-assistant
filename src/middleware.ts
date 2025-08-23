@@ -1,10 +1,33 @@
 import { authkitMiddleware } from "@workos-inc/authkit-nextjs";
 
+export function getRedirectUri() {
+  const redirectPathname = "/callback";
+  const isVercelEnv = process.env.VERCEL === "1";
+  let redirectTo;
+
+  if (isVercelEnv) {
+    const envType = process.env.VERCEL_ENV;
+    if (envType === "production") {
+      redirectTo = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+    } else {
+      redirectTo = process.env.VERCEL_URL;
+    }
+  } else {
+    redirectTo = "http://localhost:3000";
+  }
+
+  const result = new URL(redirectPathname, redirectTo);
+  console.log("Redirect URI: " + result.href);
+  return result;
+}
+
 export default authkitMiddleware({
+  redirectUri: getRedirectUri().href,
   middlewareAuth: {
     enabled: true,
     unauthenticatedPaths: ["/", "/callback", "/login"],
   },
+  debug: process.env.VERCEL_ENV !== "production",
 });
 
 export const config = {
